@@ -8,7 +8,6 @@ juke.factory('PlayerFactory', function() {
   var _isPlaying = false;
   var _audio = document.createElement('audio');
   var _songList = null;
-  var _progress = 0;
 
   // main functionality
   playerObj.start = function(song, songList) {
@@ -51,7 +50,7 @@ juke.factory('PlayerFactory', function() {
   };
 
   playerObj.getProgress = function() {
-    if (_audio.currentTime === 0) return 0;
+    if ( _audio.currentTime === 0 ) return 0;
     return _audio.currentTime / _audio.duration;
   };
 
