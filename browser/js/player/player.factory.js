@@ -1,11 +1,12 @@
 'use strict';
 
-juke.factory('PlayerFactory', function() {
+juke.factory('PlayerFactory', function($rootScope) {
 
   var playerObj = {};
   // global private vars;
   var _currentSong = null;
   var _isPlaying = false;
+  var progress = 0;
   var _audio = document.createElement('audio');
   var _songList = null;
 
@@ -14,13 +15,17 @@ juke.factory('PlayerFactory', function() {
     this.pause();
     _isPlaying = true;
     // resume current song
-    if (songList) _songList = songList;
+    if (songList) _songList = songList.songs;
     if (song === _currentSong) return _audio.play();
     // enable loading new song
     _currentSong = song;
     _audio.src = song.audioUrl;
     _audio.load();
     _audio.play();
+    _audio.addEventListener('timeupdate', function() {
+      progress = 100 * (_audio.currentTime / _audio.duration);
+      $rootScope.$evalAsync();
+    });
   };
 
   playerObj.pause = function() {
@@ -50,8 +55,7 @@ juke.factory('PlayerFactory', function() {
   };
 
   playerObj.getProgress = function() {
-    if ( _audio.currentTime === 0 ) return 0;
-    return _audio.currentTime / _audio.duration;
+    return progress;
   };
 
   // helper functions

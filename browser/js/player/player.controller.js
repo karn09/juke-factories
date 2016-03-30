@@ -1,7 +1,24 @@
 'use strict';
 
-juke.controller('PlayerCtrl', function ($scope, $rootScope) {
+juke.controller('PlayerCtrl', function($scope, PlayerFactory) {
+  $scope.playing = PlayerFactory.isPlaying;
+  $scope.currentSong = PlayerFactory.getCurrentSong;
+  $scope.prev = PlayerFactory.previous;
+  $scope.next = PlayerFactory.next;
+  // $scope.songProg = PlayerFactory.getProgress();
 
+  // $scope.progress = function() {
+  //   $scope.songProg = 100 * PlayerFactory.getProgress();
+  // };
+  $scope.songProg = PlayerFactory.getProgress;
+
+  $scope.toggle = function() {
+    if (PlayerFactory.isPlaying()) {
+      PlayerFactory.pause();
+    }  else if (!PlayerFactory.isPlaying()) {
+      PlayerFactory.resume();
+    }
+  };
   // initialize audio player (note this kind of DOM stuff is odd for Angular)
   // var audio = document.createElement('audio');
   // audio.addEventListener('ended', function () {
@@ -20,10 +37,7 @@ juke.controller('PlayerCtrl', function ($scope, $rootScope) {
   // $scope.playing = false;
   //
   // // main toggle
-  // $scope.toggle = function (song) {
-  //   if ($scope.playing) $rootScope.$broadcast('pause');
-  //   else $rootScope.$broadcast('play', song);
-  // };
+
   //
   // // incoming events (from Album or toggle)
   // $scope.$on('pause', pause);
